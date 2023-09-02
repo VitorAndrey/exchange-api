@@ -1,6 +1,7 @@
 // Url format to be requested http://localhost:3333/exchange/USD/BRL/2000
 
 import http from "node:http";
+import "dotenv/config";
 
 const server = http.createServer(async (req, res) => {
   const { method, url } = req;
@@ -12,7 +13,7 @@ const server = http.createServer(async (req, res) => {
 
     if (urlParams[1] === "exchange") {
       const apiKey = process.env.API_KEY;
-      const amount = urlParams[urlParams.length - 1];
+      const amount = Number(urlParams[urlParams.length - 1]);
       const fromCurrency = urlParams[urlParams.length - 3];
       const toCurrency = urlParams[urlParams.length - 2];
 
@@ -23,10 +24,17 @@ const server = http.createServer(async (req, res) => {
         const data = await response.json();
         const { conversion_rates } = data;
         const conversionRate = conversion_rates[toCurrency];
-
         const convertedValue = amount * conversionRate;
 
-        return res.writeHead(201).end(JSON.stringify(convertedValue));
+        const responseObject = {
+          moeda_origem: fromCurrency,
+          moeda_destino: toCurrency,
+          valor_origem: amount,
+          valor_destino: convertedValue,
+          taxa_cambio: conversionRate,
+        };
+
+        return res.writeHead(201).end(JSON.stringify(responseObject));
       } catch (error) {
         console.error(error);
         return res.writeHead(500).end("Erro na requisição");
