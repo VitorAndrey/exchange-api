@@ -5,6 +5,7 @@ import "dotenv/config";
 
 const server = http.createServer(async (req, res) => {
   const { method, url } = req;
+  const apiKey = process.env.API_KEY;
 
   console.log(method, url);
 
@@ -12,7 +13,6 @@ const server = http.createServer(async (req, res) => {
     const urlParams = url.split("/"); // Declare a variável urlParams corretamente
 
     if (urlParams[1] === "exchange") {
-      const apiKey = process.env.API_KEY;
       const amount = Number(urlParams[urlParams.length - 1]);
       const fromCurrency = urlParams[urlParams.length - 3];
       const toCurrency = urlParams[urlParams.length - 2];
@@ -41,6 +41,21 @@ const server = http.createServer(async (req, res) => {
       }
     }
   }
+
+  if ((method === "GET", url === "/currencies")) {
+    try {
+      const response = await fetch(`https://v6.exchangerate-api.com/v6/${apiKey}/latest/AED`);
+      const data = await response.json();
+      const { conversion_rates } = data;
+      const currencies_array = Object.keys(conversion_rates);
+
+      return res.writeHead(201).end(JSON.stringify(currencies_array));
+    } catch (error) {
+      console.error(error);
+      return res.writeHead(500).end("Erro na requisição");
+    }
+  }
+
   return res.writeHead(404).end("Página Não encontrada");
 });
 
