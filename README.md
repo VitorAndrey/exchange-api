@@ -52,6 +52,32 @@ A resposta será algo semelhante a:
 }
 ```
 
+Outro caso de uso é quando se quer obter a lista de todas as moedas disponíveis.
+
+```
+GET http://localhost:3333/currencies
+```
+
+A resposta será algo semelhante a:
+
+```json
+[
+	"AED",
+	"AFN",
+	"ALL",
+	"AMD",
+	"ANG",
+	"AOA",
+	"ARS",
+	"AUD",
+	"AWG",
+	"AZN",
+	"BAM",
+	"BBD",
+   "..."
+]
+```
+
 Lembre-se de que é importante substituir a chave de acesso padrão pelo seu próprio token de API da ExchangeRate-API.com antes de utilizar esta API em um ambiente de produção.
 
 ## Recursos Adicionais
